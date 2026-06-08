@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 2 Review — Juice & Game Feel | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. |
+  | |   ______     | || |  ___         | || |  ____  ____  | |
+  | |  |_   __ \   | || | |_  |        | || | |_   ||   _| | |
+  | |    | |__) |  | || |   | |        | || |   | |__| |   | |
+  | |    |  ___/   | || |   | |   _    | || |   |  __  |   | |
+  | |   _| |_      | || |  _| |__/ |   | || |  _| |  | |_  | |
+  | |  |_____|     | || | |________|   | || | |____||____| | |
+  | |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 2 Review</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-002</code></span>
+  <span><strong>Goal:</strong> Make every action feel satisfying</span>
+  <span><strong>Status:</strong> <span class="tag tag-done">Complete</span></span>
+</div>
+
+<hr>
+
+<h2>What was built</h2>
+
+<table>
+  <thead>
+    <tr><th>Task</th><th>Files created / modified</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SC-201 — Screen shake</td>
+      <td><code>game/systems/Effects.ts</code> (new), <code>game/systems/Combat.ts</code> (shake on hit &amp; death)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-202 — Hit flash</td>
+      <td><code>game/entities/Enemy.ts</code> (hitFlash method), <code>game/entities/Player.ts</code> (hitFlash + red flash)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-203 — Death particles</td>
+      <td><code>game/systems/Effects.ts</code> (emitParticles), <code>game/systems/Combat.ts</code> (wired on death)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-204 — Floor transition</td>
+      <td><code>game/scenes/DungeonScene.ts</code> (startFloorTransition with fade, scale animation)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-205 — Sound effects</td>
+      <td><code>game/systems/Audio.ts</code> (new — Web Audio oscillator synthesis)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-206 — Damage numbers</td>
+      <td><code>game/systems/Effects.ts</code> (showDamageNumber), <code>game/systems/Combat.ts</code> (wired on hit)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-207 — Sprite textures</td>
+      <td><code>game/scenes/BootScene.ts</code> (canvas texture generation), <code>game/entities/Enemy.ts</code> (texture lookup)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-208 — Projectile trails</td>
+      <td><code>game/entities/Projectile.ts</code> (makeTrail every 2 frames), <code>game/systems/Effects.ts</code> (makeTrail)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>New files</h2>
+<table>
+  <thead>
+    <tr><th>File</th><th>Purpose</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>game/systems/Effects.ts</code></td><td>Particle emitter, damage numbers, screen shake, projectile trails</td></tr>
+    <tr><td><code>game/systems/Audio.ts</code></td><td>Web Audio oscillator-based SFX (shoot, hit, death, pickup, floor clear)</td></tr>
+  </tbody>
+</table>
+
+<h2>Definition of Done checklist</h2>
+<ul class="checklist">
+  <li data-icon="✅">All task ACs met</li>
+  <li data-icon="✅"><code>npm run build</code> passes (0 errors)</li>
+  <li data-icon="✅"><code>npm run lint</code> passes (0 errors, 0 warnings)</li>
+  <li data-icon="⬜">Browser play-test (manual — verify juice effects + core loop regression)</li>
+  <li data-icon="✅">Sprint review written</li>
+</ul>
+
+<h2>Architecture notes</h2>
+<ul>
+  <li><code>Effects</code> is a static utility class — no instantiation needed, just <code>Effects.shakeCamera(scene, ...)</code> style calls</li>
+  <li><code>AudioManager</code> is wrapped in a singleton <code>export const audio = new AudioManager()</code> — imported and used directly</li>
+  <li>Sound uses Web Audio API oscillators — zero asset files, generates retro tones at runtime</li>
+  <li>Audio context is lazily created on first play (handles browser autoplay policy)</li>
+  <li>Mute toggle via <code>audio.toggleMute()</code> — not exposed in UI yet, ready for Sprint 6 settings menu</li>
+  <li>Sprite textures generated in BootScene via offscreen canvas → <code>textures.addCanvas()</code></li>
+  <li>Enemy falls back to Rectangle if texture key doesn't match</li>
+  <li>Floor transition uses <code>fadeOut</code> → text scale animation → <code>fadeIn</code> sequence</li>
+</ul>
+
+<h2>Sound effects inventory</h2>
+<ul>
+  <li><code>playShoot()</code> — square wave pitch drop, 80ms</li>
+  <li><code>playHit()</code> — square wave low pitch drop, 80ms</li>
+  <li><code>playEnemyDeath()</code> — square wave descending sweep, 250ms</li>
+  <li><code>playPlayerHit()</code> — sawtooth low growl, 200ms</li>
+  <li><code>playPlayerDeath()</code> — sawtooth descending sweep, 700ms</li>
+  <li><code>playFloorClear()</code> — three ascending square wave notes (C E G)</li>
+  <li><code>playPickup()</code> — two ascending square wave notes (E G)</li>
+</ul>
+
+</div>
+</body>
+</html>

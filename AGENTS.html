@@ -1,0 +1,46 @@
+<h1>Rogue Dreams — Agent Instructions</h1>
+
+<h2>Project</h2>
+<p>Infinite AI-generated retro roguelite.</p>
+<ul>
+  <li><strong>Stack</strong>: Next.js (monorepo) + Phaser.js + LLM generation</li>
+  <li><strong>Turn model</strong>: Real-time (Binding of Isaac style)</li>
+  <li><strong>Visuals</strong>: LLM describes → sprite recipes (composable pixel templates, no image gen API)</li>
+  <li><strong>Platform</strong>: Desktop web only</li>
+</ul>
+
+<h2>Workflow: PM + Sprints</h2>
+<ul>
+  <li>All PM artifacts in <code>docs/</code> as HTML (sprint plans, tickets, specs, status reports)</li>
+  <li>Everything traces back to a sprint or epic</li>
+  <li>Read existing HTML specs in <code>docs/</code> before starting work on any feature</li>
+</ul>
+
+<h2>Architecture</h2>
+<pre>
+rogue-dreams/
+├── pages/              # Next.js pages (index, game)
+├── game/               # Phaser game logic
+│   ├── scenes/         # Boot, Dungeon, UI
+│   ├── generation/     # LLM prompts, parsers, sprite mapping
+│   ├── entities/       # Player, Enemy, Projectile, Item
+│   └── systems/        # Collision, Combat, Camera
+├── api/generate/       # LLM generation endpoint
+├── docs/               # PM artifacts (HTML)
+└── public/sprites/     # Base tile/UI sprites
+</pre>
+
+<h2>Commands</h2>
+<pre>
+npm run dev        # Next.js dev server
+npm run build      # production build
+npm run lint       # lint
+</pre>
+
+<h2>Conventions</h2>
+<ul>
+  <li>LLM prompt templates → <code>game/generation/prompt.ts</code></li>
+  <li>LLM output parsed and validated before feeding game engine</li>
+  <li>Sprite recipes: JSON composable from body/shape/color/eyes templates</li>
+  <li>New features include corresponding HTML spec in <code>docs/</code></li>
+</ul>

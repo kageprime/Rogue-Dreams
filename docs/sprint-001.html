@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 1 — Core Loop MVP | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. || .--------------. |
+  | |  ________    | || |  _______     | || |  _________   | || |  __  ___     | |
+  | | |_   ___ `.  | || | |_   __ \    | || | |  _   _  |  | || | |_/  /   |   | |
+  | |   | |   `. \ | || |   | |__) |   | || | |_/ | | \_|  | || |   .'.` _|   | |
+  | |   | |    | | | || |   |  __ /    | || |     | |      | || | _/  /__/    | |
+  | |  _| |___.' / | || |  _| |  \ \_  | || |    _| |_     | || ||  |__|      | |
+  | | |________.'  | || | |____| |___| | || |   |_____|    | || | \______/     | |
+  | |              | || |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 1: Core Loop MVP</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-001</code></span>
+  <span><strong>Goal:</strong> Playable first floor</span>
+  <span><strong>Status:</strong> <span class="tag tag-planned">Planned</span></span>
+</div>
+
+<p class="goal">Player can start a run, move through a generated floor, fight enemies, and reach the exit to progress to the next floor.</p>
+
+<hr>
+
+<h2>Tasks</h2>
+
+<div class="task">
+  <h3>SC-001 — Project scaffold</h3>
+  <ul>
+    <li>Initialize Next.js with TypeScript</li>
+    <li>Install Phaser.js (<code>phaser</code> npm package)</li>
+    <li>Create directory structure per AGENTS.html</li>
+    <li>Configure <code>npm run dev</code> / <code>build</code> / <code>lint</code></li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> <code>npm run dev</code> starts, browser shows blank page with Phaser canvas mounted.</div>
+</div>
+
+<div class="task">
+  <h3>SC-002 — Title screen + game page</h3>
+  <ul>
+    <li>Next.js page at <code>/</code>: title screen with <code>PRESS ENTER TO START</code></li>
+    <li>Next.js page at <code>/game</code>: mounts Phaser game instance</li>
+    <li>BootScene loads base sprite assets, transitions to DungeonScene</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Hit Enter on title → navigates to <code>/game</code> → canvas renders.</div>
+</div>
+
+<div class="task">
+  <h3>SC-003 — Floor generation API</h3>
+  <ul>
+    <li>POST <code>/api/generate/floor</code> accepts a <code>seed</code> or <code>floorNumber</code></li>
+    <li>Returns JSON: <code>{ map, enemies, items, boss }</code></li>
+    <li>Prompt template in <code>game/generation/prompt.ts</code></li>
+    <li>Parser validates LLM output before returning</li>
+    <li>Seed → deterministic generation for debugging</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Calling the API returns valid game data. Invalid LLM output is caught and retried.</div>
+</div>
+
+<div class="task">
+  <h3>SC-004 — Tile map rendering + collision</h3>
+  <ul>
+    <li>Render 2D tile array as Phaser tilemap</li>
+    <li>Tile types: floor, wall, door, exit</li>
+    <li>Collision system: solid tiles block player/enemies</li>
+    <li>Rooms connected by door tiles</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Generated map renders. Player cannot walk through walls. Doors lead to adjacent rooms.</div>
+</div>
+
+<div class="task">
+  <h3>SC-005 — Player entity</h3>
+  <ul>
+    <li>WASD movement (real-time, 8-direction)</li>
+    <li>Mouse aim + click to shoot projectiles</li>
+    <li>Health bar (top-left HUD)</li>
+    <li>Simple circle sprite (placeholder)</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Player moves smoothly, shoots projectiles that travel and collide with walls/enemies.</div>
+</div>
+
+<div class="task">
+  <h3>SC-006 — Enemy entities</h3>
+  <ul>
+    <li>2 types per run (defined by API response)</li>
+    <li>Chase AI: move toward player when in detection range</li>
+    <li>Enemies take damage from projectiles, die after X hits</li>
+    <li>Enemies damage player on contact (knockback + iframes)</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Enemies chase and damage player. Player can kill them. New enemies spawn per room.</div>
+</div>
+
+<div class="task">
+  <h3>SC-007 — Weapon + item system</h3>
+  <ul>
+    <li>1 weapon per run from API response</li>
+    <li>Weapon defines: damage, fire rate, projectile speed, name</li>
+    <li>Pickup UI shown on room entry</li>
+    <li>Health pickups from defeated enemies (optional MVP scope)</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Weapon stats affect gameplay visibly. Picking up a new weapon changes behavior.</div>
+</div>
+
+<div class="task">
+  <h3>SC-008 — Exit door + floor progression</h3>
+  <ul>
+    <li>One exit tile per floor (marked on map)</li>
+    <li>Player touching exit → calls API for next floor</li>
+    <li>Brief <code>"Floor N"</code> transition screen</li>
+    <li>Health carries over between floors</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Reaching exit generates a new floor. Player continues with remaining HP.</div>
+</div>
+
+<div class="task">
+  <h3>SC-009 — Death + restart</h3>
+  <ul>
+    <li>HP hits 0 → death screen with run summary</li>
+    <li>Press Enter → return to title screen</li>
+    <li>Run summary generated from tracked stats</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Player dies, sees summary, can restart a fresh run.</div>
+</div>
+
+<hr>
+
+<h2>Definition of Done</h2>
+<ol class="checklist">
+  <li data-icon="⬜">Every task AC met and manually play-tested</li>
+  <li data-icon="⬜"><code>npm run build</code> passes with no errors</li>
+  <li data-icon="⬜"><code>npm run lint</code> passes</li>
+  <li data-icon="⬜">No console errors in browser during gameplay</li>
+  <li data-icon="⬜">Sprint summary written to <code>docs/sprint-001-review.html</code></li>
+</ol>
+
+<h2>Architecture Notes</h2>
+<ul>
+  <li>Phaser game instance managed via React ref in <code>/game</code> page</li>
+  <li>All game state lives in Phaser scenes (not React state)</li>
+  <li>API calls from Phaser scenes via <code>fetch</code></li>
+  <li>Sprite recipes: hardcoded JSON templates for MVP, expanded later</li>
+  <li>LLM prompt returns structured JSON — parse with <code>JSON.parse</code> + validation</li>
+</ul>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 2 — Juice & Game Feel | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. |
+  | |  ___  ____   | || |  ____  ____  | || |  ____  ____  | |
+  | | |_  ||_  _|  | || | |_  _||_  _| | || | |_  _||_  _| | |
+  | |   | |_/ /    | || |   \ \  / /   | || |   \ \  / /   | |
+  | |   |  __'.    | || |    \ \/ /    | || |    > `' <    | |
+  | |  _| |  \ \_  | || |    _|  |_    | || |  _/ /'`\ \_  | |
+  | | |____||____| | || |   |______|   | || | |____||____| | |
+  | |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 2: Juice &amp; Game Feel</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-002</code></span>
+  <span><strong>Goal:</strong> Make every action feel satisfying</span>
+  <span><strong>Status:</strong> <span class="tag tag-planned">Planned</span></span>
+</div>
+
+<p class="goal">Every mechanic from Sprint 1 works but feels flat. This sprint adds screen shake, particles, sound, and visual polish so hitting an enemy, getting hit, or clearing a floor <em>feels</em> like something.</p>
+
+<hr>
+
+<h2>Tasks</h2>
+
+<div class="task">
+  <h3>SC-201 — Screen shake</h3>
+  <ul>
+    <li>Camera shake on player damage (medium intensity)</li>
+    <li>Camera shake on enemy death (low intensity)</li>
+    <li>Camera shake on floor transition (brief, directional)</li>
+    <li>Configurable intensity + duration per event</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Taking damage visibly shakes the screen. Enemy deaths cause a subtle rumble.</div>
+</div>
+
+<div class="task">
+  <h3>SC-202 — Hit flash</h3>
+  <ul>
+    <li>Enemy sprite turns white for 80ms when hit</li>
+    <li>Player sprite flashes red briefly on damage</li>
+    <li>Invulnerability period has distinct visual (pulsing alpha preserved from Sprint 1)</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Every hit produces a visible feedback flash on the target.</div>
+</div>
+
+<div class="task">
+  <h3>SC-203 — Death particles</h3>
+  <ul>
+    <li>Enemy death spawns 8-12 small particles in enemy color</li>
+    <li>Particles scatter outward with random velocity + gravity</li>
+    <li>Particles fade out over 400-600ms</li>
+    <li>Reusable particle emitter utility</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Killing an enemy produces a satisfying particle burst. Different enemy colors produce different bursts.</div>
+</div>
+
+<div class="task">
+  <h3>SC-204 — Floor transition animation</h3>
+  <ul>
+    <li>Walking onto exit tile triggers a fade-to-black (300ms)</li>
+    <li>"Floor N" text appears with scale-up animation mid-fade</li>
+    <li>Fade back in to new floor layout</li>
+    <li>Player briefly invulnerable on arrival</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Floor transitions feel like a game event, not an instant cut.</div>
+</div>
+
+<div class="task">
+  <h3>SC-205 — Sound effects</h3>
+  <ul>
+    <li>Generate or source retro sound effects (Web Audio API synthesis)</li>
+    <li>Sounds required: player shoot, enemy hit, enemy death, player hit, player death, floor clear, pickup</li>
+    <li>Use Phaser's built-in audio or Web Audio oscillator-based synthesis</li>
+    <li>Volume control placeholder (global setting, defaults to 0.5)</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Every action with a visual effect also has an audio cue. Sound can be muted.</div>
+</div>
+
+<div class="task">
+  <h3>SC-206 — Damage numbers</h3>
+  <ul>
+    <li>Floating text appears at enemy position when hit</li>
+    <li>Number = damage dealt, colored white</li>
+    <li>Floats upward and fades over 600ms</li>
+    <li>Small upward velocity + random horizontal offset</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Each hit shows a floating damage number that fades out.</div>
+</div>
+
+<div class="task">
+  <h3>SC-207 — Sprite texture generation</h3>
+  <ul>
+    <li>Render adversary sprite recipes to actual canvas textures at boot time</li>
+    <li>Use <code>Phaser.GameObjects.RenderTexture</code> or canvas texture generation</li>
+    <li>Replace colored rectangles with generated textures for enemies</li>
+    <li>Player gets a simple ship/character texture too</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Enemies render as pixel-art sprites from their recipe instead of solid rectangles.</div>
+</div>
+
+<div class="task">
+  <h3>SC-208 — Projectile trails</h3>
+  <ul>
+    <li>Each projectile leaves a short fading trail (3-5 trailing circles)</li>
+    <li>Trail color matches projectile color, alpha decreases with age</li>
+    <li>Trail disappears when projectile is destroyed or off-screen</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Projectiles have a visible motion trail behind them.</div>
+</div>
+
+<hr>
+
+<h2>Definition of Done</h2>
+<ol class="checklist">
+  <li data-icon="⬜">Every task AC met and manually play-tested</li>
+  <li data-icon="⬜"><code>npm run build</code> passes with 0 errors</li>
+  <li data-icon="⬜"><code>npm run lint</code> passes with 0 errors, 0 warnings</li>
+  <li data-icon="⬜">No regression in Sprint 1 gameplay (core loop still works)</li>
+  <li data-icon="⬜">Sprint review written to <code>docs/sprint-002-review.html</code></li>
+</ol>
+
+<h2>Architecture Notes</h2>
+<ul>
+  <li>Particle effects: create a <code>game/systems/Particles.ts</code> utility class</li>
+  <li>Screen shake: use <code>this.cameras.main.shake(duration, intensity)</code></li>
+  <li>Sound: create <code>game/systems/Audio.ts</code> using Web Audio API oscillators (no asset files needed)</li>
+  <li>Sprite textures: generate <code>Phaser.Textures</code> from canvas at boot time in BootScene</li>
+  <li>Damage numbers: lightweight <code>Phaser.GameObjects.Text</code> with tween animation</li>
+  <li>Projectile trails: array of circles parented to projectile, recycled/removed as they fade</li>
+</ul>
+
+<hr>
+
+<h2>Dependencies</h2>
+<ul>
+  <li>SC-207 (sprite textures) depends on <code>game/generation/sprites.ts</code> from Sprint 1</li>
+  <li>SC-203 (death particles) and SC-206 (damage numbers) both depend on enemy hit detection from CombatSystem</li>
+  <li>SC-204 (floor transition) depends on DungeonScene's nextFloor flow from Sprint 1</li>
+  <li>All other tasks are independent and can be parallelized</li>
+</ul>
+
+</div>
+</body>
+</html>

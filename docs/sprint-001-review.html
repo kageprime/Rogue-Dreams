@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 1 Review — Core Loop MVP | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. |
+  | |  ___  ____   | || |  _______     | || |    _______   | |
+  | | |_  ||_  _|  | || | |_   __ \    | || |   /  ___  |  | |
+  | |   | |_/ /    | || |   | |__) |   | || |  |  (__ \_|  | |
+  | |   |  __'.    | || |   |  __ /    | || |   '.___`-.   | |
+  | |  _| |  \ \_  | || |  _| |  \ \_  | || |  |`\____) |  | |
+  | | |____||____| | || | |____| |___| | || |  |_______.'  | |
+  | |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 1 Review</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-001</code></span>
+  <span><strong>Goal:</strong> Playable first floor</span>
+  <span><strong>Status:</strong> <span class="tag tag-done">Complete</span></span>
+</div>
+
+<hr>
+
+<h2>What was built</h2>
+
+<table>
+  <thead>
+    <tr><th>Task</th><th>Files</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SC-001 — Project scaffold</td>
+      <td><code>package.json</code>, <code>tsconfig.json</code>, <code>next.config.ts</code>, <code>eslint.config.mjs</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-002 — Title screen + game page</td>
+      <td><code>app/page.tsx</code>, <code>app/game/page.tsx</code>, <code>app/game/GameClient.tsx</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-003 — Floor generation API</td>
+      <td><code>app/api/generate/floor/route.ts</code>, <code>game/generation/prompt.ts</code>, <code>game/generation/parser.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-004 — Tile map rendering + collision</td>
+      <td><code>game/systems/Collision.ts</code>, <code>game/scenes/DungeonScene.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-005 — Player entity</td>
+      <td><code>game/entities/Player.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-006 — Enemy entities</td>
+      <td><code>game/entities/Enemy.ts</code>, <code>game/generation/sprites.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-007 — Weapon + item system</td>
+      <td><code>game/entities/Player.ts</code>, <code>game/scenes/GameUI.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-008 — Exit door + floor progression</td>
+      <td><code>game/scenes/DungeonScene.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-009 — Death + restart</td>
+      <td><code>game/scenes/DungeonScene.ts</code></td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Architecture decisions made</h2>
+<ul>
+  <li>Phaser mounted via <code>next/dynamic</code> with <code>ssr: false</code> to avoid <code>window</code> reference errors</li>
+  <li>GameClient component separated from page for clean dynamic import pattern</li>
+  <li>Fallback procedural generation used when LLM API is unavailable</li>
+  <li>All game state lives in Phaser scenes — React is just a shell</li>
+  <li>Sprite rendering uses geometric shapes — no sprite assets needed for MVP</li>
+  <li>Camera zoom set to 2x for retro feel</li>
+  <li>Weapon stats rotate per floor from a predefined pool</li>
+</ul>
+
+<h2>Definition of Done checklist</h2>
+<ul class="checklist">
+  <li data-icon="✅">All task ACs met</li>
+  <li data-icon="✅"><code>npm run build</code> passes (0 errors)</li>
+  <li data-icon="✅"><code>npm run lint</code> passes (0 errors, 0 warnings)</li>
+  <li data-icon="⬜">Browser play-test (manual — needs human to verify WASD, shooting, enemy AI, exit door, death)</li>
+  <li data-icon="✅">Sprint summary written</li>
+</ul>
+
+<h2>Known gaps <span class="tag tag-gap">Sprint 2 Candidates</span></h2>
+<ul>
+  <li>LLM integration not wired — API falls back to procedural generation</li>
+  <li>No sound effects or music</li>
+  <li>Enemy variety limited to 2 types per run (pool of 4)</li>
+  <li>No minimap</li>
+  <li>No persistent save / progression</li>
+  <li>Weapon pickups not yet spawned as items on map</li>
+  <li>Touch/mobile not supported</li>
+</ul>
+
+<h2>File inventory</h2>
+<div class="file-tree">
+<span class="dir">app/</span>
+  <span class="file">├── page.tsx              — Title screen</span>
+  <span class="file">├── layout.tsx            — Root layout</span>
+  <span class="file">├── globals.css           — Global styles</span>
+  <span class="dir">├── game/</span>
+  <span class="file">│   ├── page.tsx         — Game page (dynamic import)</span>
+  <span class="file">│   └── GameClient.tsx   — Phaser mount component</span>
+  <span class="dir">└── api/generate/floor/</span>
+  <span class="file">    └── route.ts         — Floor generation API</span>
+
+<span class="dir">game/</span>
+  <span class="file">├── config.ts             — Phaser game config</span>
+  <span class="file">├── types.ts              — Shared types/constants</span>
+  <span class="dir">├── scenes/</span>
+  <span class="file">│   ├── BootScene.ts    — Boot/loading scene</span>
+  <span class="file">│   ├── DungeonScene.ts — Main game loop</span>
+  <span class="file">│   └── GameUI.ts       — HUD overlay</span>
+  <span class="dir">├── entities/</span>
+  <span class="file">│   ├── Player.ts      — Movement, shooting, health</span>
+  <span class="file">│   ├── Enemy.ts       — Chase AI, damage, death</span>
+  <span class="file">│   └── Projectile.ts  — Projectile lifecycle</span>
+  <span class="dir">├── generation/</span>
+  <span class="file">│   ├── prompt.ts      — LLM prompt templates</span>
+  <span class="file">│   ├── parser.ts      — JSON output parser</span>
+  <span class="file">│   └── sprites.ts     — Sprite recipe mapping</span>
+  <span class="dir">└── systems/</span>
+  <span class="file">    ├── Collision.ts  — Wall map collision</span>
+  <span class="file">    ├── Combat.ts     — Damage, projectiles, score</span>
+  <span class="file">    └── Camera.ts     — Camera follow + zoom</span>
+</div>
+
+</div>
+</body>
+</html>

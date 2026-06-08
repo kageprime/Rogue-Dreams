@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 3 — Content Depth | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. |
+  | |  ___         | || |  ____  ____  | || |  ____  ____  | |
+  | | |_  |        | || | |_  _||_  _| | || | |_  _||_  _| | |
+  | |   | |  _     | || |   \ \  / /   | || |   \ \  / /   | |
+  | |   | | | |    | || |    \ \/ /    | || |    \ \/ /    | |
+  | |  _| | |_|    | || |    _|  |_    | || |    _|  |_    | |
+  | | |________|   | || |   |______|   | || |   |______|   | |
+  | |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 3: Content Depth</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-003</code></span>
+  <span><strong>Goal:</strong> More enemy types, bosses, items, map features</span>
+  <span><strong>Status:</strong> <span class="tag tag-planned">Planned</span></span>
+</div>
+
+<p class="goal">Sprint 2 made the game <em>feel</em> good. Sprint 3 makes it <em>deep</em> — ranged enemies, boss fights, item pickups, a minimap, and visual variety so every run is different.</p>
+
+<hr>
+
+<h2>Tasks</h2>
+
+<div class="task">
+  <h3>SC-301 — Ranged enemies</h3>
+  <ul>
+    <li>New <code>EnemyProjectile</code> entity class</li>
+    <li>Ranged AI: maintain distance, fire on cooldown</li>
+    <li>Enemy projectiles: red/orange, wall collision, player-damaging</li>
+    <li>Add ranged enemy types to API pool</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Ranged enemies fire projectiles, keep distance, can be killed. Players dodge or use walls.</div>
+</div>
+
+<div class="task">
+  <h3>SC-302 — Boss rooms</h3>
+  <ul>
+    <li>Every 3rd floor spawns a boss (3x HP, 48px, charge + barrage + slam phases)</li>
+    <li>Boss arena room, exit locked until boss dies</li>
+    <li>Boss HP bar in GameUI, reward drop on death</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Boss encounters with visible HP bar, multiple attack types, reward on kill.</div>
+</div>
+
+<div class="task">
+  <h3>SC-303 — Weapon pickups</h3>
+  <ul>
+    <li>Weapons as floor items from <code>FloorData.items</code></li>
+    <li>Walk over to equip, notification + sound</li>
+    <li>Glowing visual indicator</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Weapons appear as pickups; equipping shows notification and swaps weapon.</div>
+</div>
+
+<div class="task">
+  <h3>SC-304 — Passive items</h3>
+  <ul>
+    <li>Boots of Speed (+30%), Shield (+2 max HP, -1 dmg), Tri-Shot (3 projectiles)</li>
+    <li>Stored on Player, modifiers applied in update</li>
+    <li>HUD shows active item icons</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Passive items visibly affect gameplay.</div>
+</div>
+
+<div class="task">
+  <h3>SC-305 — Minimap</h3>
+  <ul>
+    <li>160x120px overlay in top-right corner</li>
+    <li>Rooms as rectangles, player dot, exit marker, fog of war</li>
+    <li>Phaser Graphics in GameUI scene</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Minimap shows explored rooms, player, exit. Unexplored areas hidden.</div>
+</div>
+
+<div class="task">
+  <h3>SC-306 — Floor themes</h3>
+  <ul>
+    <li>5 palettes: Dungeon, Cave, Ice, Fire, Void</li>
+    <li>Applied in <code>renderMap()</code> via floor number</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Different floor depths have distinct color palettes.</div>
+</div>
+
+<div class="task">
+  <h3>SC-307 — Enemy scaling</h3>
+  <ul>
+    <li>Count: <code>2 + floor/2</code>, HP: <code>base + floor</code>, speed scales</li>
+    <li>Elite variants (10%): 2x HP, 1.5x dmg, gold tint</li>
+    <li>Mix: at least 1 ranged + 1 melee after floor 2</li>
+  </ul>
+  <div class="acceptance"><strong>Acceptance:</strong> Higher floors are visibly harder.</div>
+</div>
+
+<hr>
+
+<h2>Definition of Done</h2>
+<ol class="checklist">
+  <li data-icon="⬜">All task ACs met and play-tested</li>
+  <li data-icon="⬜"><code>npm run build</code> 0 errors</li>
+  <li data-icon="⬜"><code>npm run lint</code> 0 errors, 0 warnings</li>
+  <li data-icon="⬜">No regression in Sprint 1-2</li>
+  <li data-icon="⬜">Sprint review written</li>
+</ol>
+
+<h2>New files</h2>
+<table>
+  <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>game/entities/Boss.ts</code></td><td>Boss with phase AI, HP bar events</td></tr>
+    <tr><td><code>game/entities/EnemyProjectile.ts</code></td><td>Enemy-owned projectile</td></tr>
+    <tr><td><code>game/entities/Item.ts</code></td><td>Item pickup (weapon + passive)</td></tr>
+    <tr><td><code>game/systems/ItemSystem.ts</code></td><td>Item spawning + pickup logic</td></tr>
+    <tr><td><code>game/systems/Minimap.ts</code></td><td>Minimap + fog of war</td></tr>
+    <tr><td><code>game/generation/themes.ts</code></td><td>Floor palette definitions</td></tr>
+  </tbody>
+</table>
+
+<h2>Modified files</h2>
+<table>
+  <thead><tr><th>File</th><th>Changes</th></tr></thead>
+  <tbody>
+    <tr><td><code>game/types.ts</code></td><td>Add boss, enemy projectile, passive item, theme types</td></tr>
+    <tr><td><code>game/entities/Player.ts</code></td><td>Passive items, speed modifier, multi-shot</td></tr>
+    <tr><td><code>game/entities/Enemy.ts</code></td><td>Ranged AI, elite tint</td></tr>
+    <tr><td><code>game/scenes/DungeonScene.ts</code></td><td>Boss rooms, items, minimap, themes</td></tr>
+    <tr><td><code>game/scenes/GameUI.ts</code></td><td>Boss HP bar, item icons</td></tr>
+    <tr><td><code>game/systems/Combat.ts</code></td><td>Enemy projectile collisions</td></tr>
+    <tr><td><code>app/api/generate/floor/route.ts</code></td><td>Boss gen, item placement, scaling</td></tr>
+    <tr><td><code>game/generation/sprites.ts</code></td><td>More sprite recipes</td></tr>
+  </tbody>
+</table>
+
+<h2>Dependencies</h2>
+<ul>
+  <li>SC-301 → needed by SC-302 (boss ranged phase) and SC-307 (enemy mix)</li>
+  <li>SC-302 → depends on SC-301 for boss attacks</li>
+  <li>SC-304 → independent</li>
+  <li>SC-305 → independent once rooms data is available</li>
+  <li>SC-306 → depends on renderMap structure</li>
+  <li>SC-307 → depends on SC-301 for ranged type</li>
+</ul>
+
+</div>
+</body>
+</html>

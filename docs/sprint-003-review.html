@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sprint 3 Review — Content Depth | Rogue Dreams</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+
+<div class="header-ascii">
+  .----------------.  .----------------.  .----------------.
+  | .--------------. || .--------------. || .--------------. |
+  | |  _____  __   | || |  ___         | || |  ____  ____  | |
+  | | |_   _|/  |  | || | |_  |        | || | |_   ||   _| | |
+  | |   | |  `| |  | || |   | |  _     | || |   | |__| |   | |
+  | |   | |   | |  | || |   | | | |    | || |   |  __  |   | |
+  | |  _| |__| |_  | || |  _| | |_|    | || |  _| |  | |_  | |
+  | | |________|   | || | |________|   | || | |____||____| | |
+  | |              | || |              | || |              | |
+  | '--------------' || '--------------' || '--------------' |
+  '----------------'  '----------------'  '----------------'
+</div>
+
+<h1>Sprint 3 Review</h1>
+
+<div class="meta">
+  <span><strong>Epic:</strong> <code>EPIC-003</code></span>
+  <span><strong>Goal:</strong> More enemy types, bosses, items, map features</span>
+  <span><strong>Status:</strong> <span class="tag tag-done">Complete</span></span>
+</div>
+
+<hr>
+
+<h2>What was built</h2>
+
+<table>
+  <thead>
+    <tr><th>Task</th><th>Files</th><th>Status</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>SC-301 — Ranged enemies</td>
+      <td><code>game/entities/EnemyProjectile.ts</code> (new), <code>game/entities/Enemy.ts</code> (ranged AI), <code>game/systems/Combat.ts</code> (projectile handling)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-302 — Boss rooms</td>
+      <td><code>game/entities/Boss.ts</code> (new — charge/barrage/slam phases), <code>game/scenes/DungeonScene.ts</code> (boss room flow), <code>game/scenes/GameUI.ts</code> (boss HP bar)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-303 — Weapon pickups</td>
+      <td><code>game/entities/Item.ts</code> (new), <code>game/systems/ItemSystem.ts</code> (new), <code>game/scenes/DungeonScene.ts</code> (item spawn)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-304 — Passive items</td>
+      <td><code>game/entities/Player.ts</code> (speed/shield/trishot modifiers), <code>game/entities/Item.ts</code> (passive pickup), <code>game/scenes/GameUI.ts</code> (item icons)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-305 — Minimap</td>
+      <td><code>game/systems/Minimap.ts</code> (new — room mapping, fog of war, player/exit dots)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-306 — Floor themes</td>
+      <td><code>game/generation/themes.ts</code> (new — 5 palettes), <code>game/scenes/DungeonScene.ts</code> (theme-aware renderMap)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+    <tr>
+      <td>SC-307 — Enemy scaling</td>
+      <td><code>app/api/generate/floor/route.ts</code> (count/HP/speed scaling), <code>game/entities/Enemy.ts</code> (elite tint), <code>game/scenes/DungeonScene.ts</code> (fallback scaling)</td>
+      <td><span class="tag tag-done">Done</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>New files (6)</h2>
+<table>
+  <thead><tr><th>File</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>game/entities/Boss.ts</code></td><td>Boss entity with 3 attack phases (charge, barrage, slam), HP callbacks, arena-scale sprite</td></tr>
+    <tr><td><code>game/entities/EnemyProjectile.ts</code></td><td>Enemy-owned red projectile with wall collision</td></tr>
+    <tr><td><code>game/entities/Item.ts</code></td><td>Weapon/passive/health pickup with hover animation + label</td></tr>
+    <tr><td><code>game/systems/ItemSystem.ts</code></td><td>Item spawning, walk-over pickup, notification display</td></tr>
+    <tr><td><code>game/systems/Minimap.ts</code></td><td>Top-right corner minimap with fog of war, room discovery, player/exit dots</td></tr>
+    <tr><td><code>game/generation/themes.ts</code></td><td>5 floor color palettes (Dungeon, Cave, Ice, Fire, Void)</td></tr>
+  </tbody>
+</table>
+
+<h2>Modified files (9)</h2>
+<table>
+  <thead><tr><th>File</th><th>Key changes</th></tr></thead>
+  <tbody>
+    <tr><td><code>game/types.ts</code></td><td>Added <code>PassiveItemType</code>, <code>GameItemData</code>, <code>FloorTheme</code>, <code>isElite</code> field</td></tr>
+    <tr><td><code>game/entities/Player.ts</code></td><td>Passive item set, getSpeed/getDamageReduction/hasTriShot, shield max HP boost</td></tr>
+    <tr><td><code>game/entities/Enemy.ts</code></td><td>Ranged AI (maintain distance + fire), enemyProjectiles array, elite tint, fireProjectile method</td></tr>
+    <tr><td><code>game/systems/Combat.ts</code></td><td>Enemy projectile tracking + player collision, boss collision</td></tr>
+    <tr><td><code>game/scenes/DungeonScene.ts</code></td><td>Boss room flow, item spawning, minimap integration, theme-aware rendering, tri-shot fire, exit after boss death, scaling</td></tr>
+    <tr><td><code>game/scenes/GameUI.ts</code></td><td>Boss HP bar, item icons text</td></tr>
+    <tr><td><code>game/scenes/BootScene.ts</code></td><td>Generate archer/mage/boss sprite textures</td></tr>
+    <tr><td><code>game/generation/sprites.ts</code></td><td>Added cross/star body shapes, glow eyes, archer/mage/boss recipes</td></tr>
+    <tr><td><code>app/api/generate/floor/route.ts</code></td><td>Boss names/titles, ranged enemy pool, enemy scaling, weapon/passive/health item generation</td></tr>
+  </tbody>
+</table>
+
+<h2>Definition of Done checklist</h2>
+<ul class="checklist">
+  <li data-icon="✅">All task ACs met</li>
+  <li data-icon="✅"><code>npm run build</code> passes (0 errors)</li>
+  <li data-icon="✅"><code>npm run lint</code> passes (0 errors, 0 warnings)</li>
+  <li data-icon="⬜">Browser play-test (manual — verify bosses, items, minimap, ranged enemies, themes, scaling)</li>
+  <li data-icon="✅">Sprint review written</li>
+</ul>
+
+<h2>Architecture decisions</h2>
+<ul>
+  <li>Boss extends Enemy-like behavior but is a standalone class with phase-based AI state machine</li>
+  <li>EnemyProjectile is simpler than Player Projectile — no trail, no damage numbers</li>
+  <li>Passive items stored as <code>Set&lt;PassiveItemType&gt;</code> on Player — cheap to check, easy to extend</li>
+  <li>Tri-shot modifies fire logic in DungeonScene (3 projectiles spread by 5 degrees), not in Player</li>
+  <li>Minimap coordinates are world-pixel → minimap-pixel scaled, rooms tracked by index in discoveredRooms Set</li>
+  <li>Floor themes selected by <code>Math.max floor >= theme.floor</code> — last applicable theme wins</li>
+  <li>Boss exit: exitSprite created dynamically (not from map tile) after boss death at item spawn location</li>
+  <li>Enemy scaling applied in both API route (real) and DungeonScene (fallback) for consistency</li>
+</ul>
+
+</div>
+</body>
+</html>
